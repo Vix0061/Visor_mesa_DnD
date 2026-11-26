@@ -4,8 +4,8 @@
 //
 //   node scripts/demo-visor.mjs <token> <carpeta-de-prueba> [ms-entre-pasos] [puerto]
 //
-// Usa una carpeta de prueba con al menos 2 imágenes: la 1.ª será una región,
-// la 2.ª una zona y las demás (o la 1.ª si no hay más) las figuras. Las
+// Usa una carpeta de prueba con al menos 2 imágenes: la 1.ª será una región (y la 3.ª, o la
+// 1.ª, la región 2), la 2.ª una zona y las demás las figuras. Las
 // entidades que crea llevan el prefijo "demo:" y se borran al volver a ejecutarlo.
 import { conectar, pausa } from './cliente-ws.mjs';
 
@@ -64,6 +64,7 @@ async function crear(mensaje, lista, nombre, cambios = {}) {
 
 const region = await crear({ tipo: 'crearEscenario', imagen: imagenes[0], tipoEscenario: 'region' }, 'escenarios', 'región');
 const zona = await crear({ tipo: 'crearEscenario', imagen: imagenes[1], tipoEscenario: 'zona' }, 'escenarios', 'zona');
+const region2 = await crear({ tipo: 'crearEscenario', imagen: imagenes[2] ?? imagenes[0], tipoEscenario: 'region' }, 'escenarios', 'región 2');
 const imagenFigura = (i) => imagenes[2 + i] ?? imagenes[2] ?? imagenes[0];
 const cartas = [
   { nombre: 'Marta la Posadera', descripcion: 'Dueña de El Jabalí Dorado. Sabe más de lo que dice.' },
@@ -79,8 +80,13 @@ for (const [i, carta] of cartas.entries()) {
   figuras.push(await crear({ tipo: 'crearFigura', imagen: imagenFigura(i), tipoFigura: i === 3 ? 'objeto' : 'personaje' }, 'figuras', `figura ${i + 1}`, { carta }));
 }
 const pinA = { x: 0.3, y: 0.55, destinoId: zona };
+const pinB = { x: 0.72, y: 0.3, destinoId: region2 };
+const pinC = { x: 0.5, y: 0.8, destinoId: zona };
 await accion({ tipo: 'actualizarEscenario', id: region, cambios: { pines: [pinA] } });
+await accion({ tipo: 'actualizarEscenario', id: region2, cambios: { pines: [{ x: 0.2, y: 0.25, destinoId: region }] } });
 
+const activar = (id) => ({ tipo: 'activarEscenario', id });
+const pines = (lista) => ({ tipo: 'actualizarEscenario', id: region, cambios: { pines: lista } });
 const visibilidad = (i, visible) => ({ tipo: 'cambiarVisibilidadFigura', id: figuras[i], visible });
 const cuadricula = (visible, tamanoCelda, desplazamientoX = 0, desplazamientoY = 0) => ({
   tipo: 'actualizarEscenario',
@@ -89,20 +95,26 @@ const cuadricula = (visible, tamanoCelda, desplazamientoX = 0, desplazamientoY =
 });
 
 const pasos = [
-  ['Región activa con un pin, sin figuras', [{ tipo: 'activarEscenario', id: region }]],
+  ['Región activa con un pin (fundido desde la espera), sin figuras', [activar(region)]],
   ['Aparece "Marta la Posadera" (con carta)', [visibilidad(0, true)]],
   ['Aparece una figura sin carta', [visibilidad(1, true)]],
   ['Aparece "Eldrin el Gris" (descripción larga)', [visibilidad(2, true)]],
-  ['Cambia a la zona: las figuras no se tocan', [{ tipo: 'activarEscenario', id: zona }]],
-  ['Cuadrícula visible (celda de 100 px)', [cuadricula(true, 100)]],
-  ['Cuadrícula: celda de 60 px desplazada 20, 10', [cuadricula(true, 60, 20, 10)]],
+  ['Cambia a la zona: zoom hacia el pin; las figuras no se tocan', [activar(zona)]],
+  ['Cuadrícula visible (fundido, celda de 100 px)', [cuadricula(true, 100)]],
+  ['Cuadrícula: celda de 60 px desplazada 20, 10 (directo)', [cuadricula(true, 60, 20, 10)]],
   ['Sale la figura del medio: la fila se recentra', [visibilidad(1, false)]],
   ['Vuelven a ser 4 visibles (la del medio entra al final)', [visibilidad(3, true), visibilidad(1, true)]],
   ['Cambia la carta de la primera figura', [{ tipo: 'actualizarFigura', id: figuras[0], cambios: { carta: { nombre: 'Marta', descripcion: 'Ahora os mira con desconfianza.' } } }]],
-  ['Vuelve a la región', [{ tipo: 'activarEscenario', id: region }]],
-  ['Aparece un segundo pin en la región', [{ tipo: 'actualizarEscenario', id: region, cambios: { pines: [pinA, { x: 0.72, y: 0.3, destinoId: zona }] } }]],
+  ['Vuelve a la región: zoom inverso desde su pin', [activar(region)]],
+  ['Aparecen dos pines más en la región', [pines([pinA, pinB, pinC])]],
+  ['Se quita el último pin (se desvanece)', [pines([pinA, pinB])]],
   ['Se ocultan todas las figuras', figuras.map((_, i) => visibilidad(i, false))],
-  ['Cuadrícula de la zona oculta y vuelta a la zona', [cuadricula(false, 60, 20, 10), { tipo: 'activarEscenario', id: zona }]],
+  ['Va a la región 2: las dos se apuntan, gana el zoom hacia el pin', [activar(region2)]],
+  ['Cambia la imagen de la región 2: fundido cruzado', [{ tipo: 'actualizarEscenario', id: region2, cambios: { imagen: imagenes[1] } }]],
+  ['Región 2 -> zona, sin pin que las una: fundido cruzado', [activar(zona)]],
+  ['Seguidos: región, zona, región 2 -> tras la 1.ª transición salta a la región 2', [activar(region), activar(zona), activar(region2)]],
+  ['Vuelve a la zona (fundido cruzado)', [activar(zona)]],
+  ['Se oculta la cuadrícula de la zona (fundido)', [cuadricula(false, 60, 20, 10)]],
 ];
 
 console.log(`Abre el visor en el navegador. Un paso cada ${msPaso} ms:\n`);

@@ -15,12 +15,14 @@ aquí y no se deduzca del código, pregúntalo al usuario antes de decidirlo.
 | 2 | Persistencia: carga con reparación, escritura atómica, debounce, escaneo | ✅ Confirmada |
 | 3 | Sesión, controlador y transporte (HTTP + WS) | ✅ Confirmada |
 | 4 | Visor sin animaciones | ✅ Confirmada |
-| 5 | Panel básico | ✅ Confirmada (en Windows; Linux sin probar todavía) |
-| 6 | Editor de pines, cambio de tipo con aviso, región inicial, imagen faltante | ✅ Confirmada (en Windows) |
-| 7 | Animaciones de ambas capas, precarga y acabado visual | Pendiente |
+| 5 | Panel básico | ✅ Confirmada (Windows y Linux/Ubuntu) |
+| 6 | Editor de pines, cambio de tipo con aviso, región inicial, imagen faltante | ✅ Confirmada (Windows y Linux/Ubuntu) |
+| 7a | Animaciones de la capa de escenario y precarga de sus imágenes | ✅ Confirmada |
+| 7b | Animaciones de la capa de figuras (entrada, salida, FLIP, cambio de carta/imagen) | Pendiente |
 | 8 | Empaquetado y README | Pendiente |
 
-**Siguiente paso:** empezar la fase 7 (animaciones). `npm test` debe dar `tests 73, pass 73, fail 0`.
+**Siguiente paso:** fase 7b (animaciones de la capa de figuras).
+`npm test` debe dar `tests 73, pass 73, fail 0`.
 El proyecto está en GitHub (repositorio privado `mesa-dnd`, rama `main`).
 
 ---
@@ -159,7 +161,7 @@ src/
                   estructuraCampana.ts  ErrorPersistencia.ts
   visor/        index.html  visor.css  principal.ts  ConexionVisor.ts  ControladorVisor.ts  tsconfig.json
     vista/        CapaEscenario.ts  Lienzo.ts  CapaFiguras.ts  TarjetaFigura.ts
-                  IndicadorConexion.ts  urlImagen.ts
+                  IndicadorConexion.ts  urlImagen.ts  transiciones.ts
   panel/        index.html  panel.css  principal.ts  ConexionPanel.ts  ControladorPanel.ts  tsconfig.json
     vista/        VistaPanel.ts (raíz; EstadoPanel, AccionesPanel, Seleccion)  BarraCampana.ts
                   VistaBiblioteca.ts  ListaEntidades.ts  FormularioEscenario.ts  FormularioFigura.ts
@@ -292,6 +294,24 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 
 ---
 
+### Visor (fase 7a, capa de escenario)
+- La fase 7 se dividió (previsto en el plan): 7a = capa de escenario, 7b = capa de figuras.
+- `CapaEscenario` guarda solo el último objetivo y procesa en serie (`#procesar`): si llegan cambios durante
+  una transición, al acabar salta directamente al último.
+- Mismo id **y misma imagen** → `Lienzo.actualizar()` (sin rehacer; la reconexión no anima nada). Otra
+  imagen o otro id → lienzo nuevo: `preparar()` hace `img.decode()` antes de insertarlo (si falla, fondo
+  rayado) y luego la transición; el saliente se quita al acabar. El `Lienzo` ya no cambia de imagen.
+- `transiciones.ts`: `fundidoCruzado` (700 ms), `zoomHaciaPin` (saliente escala ×3,5 con
+  `transform-origin` en el pin y se funde; el entrante entra a 1,06→1), `zoomDesdePin` (el entrante parte
+  ×3,5 sobre su pin), `aparecer`/`desvanecer` (pines y cuadrícula, 400 ms). Solo `transform`/`opacity`.
+  `aparecer`/`desvanecer` cancelan antes las animaciones del elemento (un `fill: 'forwards'` anterior
+  seguiría aplicándose).
+- Pines reconciliados por posición `"x,y"` (no tienen id): cambiar solo el destino no anima nada.
+- Aprobado por el usuario: duraciones (fundido 0,7 s, zoom ~1,2 s, ×3,5) y que un cambio del mismo
+  escenario durante una transición espere a que acabe.
+- La pantalla de espera queda siempre debajo y se funde con una transición CSS de `opacity`.
+  `.capa-escenario` tiene `overflow: hidden` por el zoom.
+
 ## 7. Mensajes WebSocket (definición exacta en `src/compartido/mensajes.ts`)
 
 - **Panel → servidor**: `abrirCampana {carpeta, crear?}`, `refrescarBiblioteca`,
@@ -315,7 +335,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 
 ## 8. Lo que falta (compromisos aprobados por fase)
 
-### Fase 7 — Animaciones (si es muy grande, dividir en capa de escenario y capa de figuras)
+### Fase 7 — Animaciones (dividida: 7a capa de escenario, hecha; 7b capa de figuras, pendiente)
 - CSS / Web Animations API sobre `transform` y `opacity` únicamente. Las animaciones son exclusivas de la
   vista del cliente; el servidor no envía nada sobre animación: el visor deduce la transición comparando lo
   que tiene en pantalla con lo que llega.
@@ -361,7 +381,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   - `node scripts/probar-servidor.mjs <token> <carpeta-de-prueba>` → 31 comprobaciones de servidor
     (autorización, límite de 4, mensajes inválidos, HTTP, panel desde la IP de la LAN rechazado).
   - `node scripts/demo-visor.mjs <token> <carpeta-de-prueba> [ms]` → monta entidades con prefijo `demo:` y
-    recorre 14 pasos; abrir el visor en `http://127.0.0.1:8080/` para verlo.
+    recorre 20 pasos (incluye todas las transiciones de escenario de la fase 7a); abrir el visor en `http://127.0.0.1:8080/` para verlo.
   - Usar siempre carpetas de prueba (los scripts crean entidades).
 - Estos scripts son de desarrollo; se podrán borrar cuando el panel cubra lo mismo (preguntar al usuario).
 - Verificación visual automatizada usada en la fase 4 (los scripts estaban en un scratchpad temporal y se
@@ -381,6 +401,9 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Fase 6 (21 comprobaciones): clics reales con `Input.dispatchMouseEvent` sobre la imagen del editor,
   teclas reales con `Input.dispatchKeyEvent`/`Input.insertText`, y `Network.webSocketFrameSent` para
   contar lo que envía el panel. Captura del visor con Edge headless contra `http://127.0.0.1:8080/`.
+- Fase 7a: Edge headless en el visor sondeando cada 80 ms `getAnimations()` de cada `.lienzo`, sus pines
+  y su cuadrícula (keyframes, `transform-origin`), mientras corre `demo-visor.mjs` con 2500 ms por paso;
+  más una captura a mitad de cada transición. Carpeta de prueba: solo `mapas/` y `retratos/`.
 
 ---
 
