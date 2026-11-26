@@ -9,6 +9,9 @@ navegador en la misma red local.
 - **Visor**: una página web (`http://<ip-del-DM>:8080/`) que se abre en la tele, un móvil o cualquier
   navegador de la red. Solo muestra; no se puede tocar nada desde ahí.
 
+**¿Primera vez?** Lee la [Guía de uso](GUIA.md): inicio rápido en 5 minutos, todo el panel explicado y
+soluciones a los problemas habituales.
+
 ## Descarga
 
 En la página [Releases](../../releases) del repositorio:
@@ -78,7 +81,8 @@ npm test         # tests unitarios del modelo y de las validaciones
 
 - En Linux, tras clonar: `bash scripts/preparar-linux.sh` (instala Node 26 con nvm si falta, las
   dependencias y ajusta el sandbox de Electron). Ejecútalo **sin** `sudo`.
-- `node scripts/demo-visor.mjs <token> <carpeta-de-prueba> [ms]` recorre todas las transiciones del visor.
+- Los scripts de prueba (`demo-visor.mjs`, que recorre todas las transiciones del visor, y
+  `probar-servidor.mjs`) están en la rama `herramientas-prueba`.
 - `CLAUDE.md` recoge la especificación, la arquitectura y las decisiones del proyecto.
 
 ### Empaquetar

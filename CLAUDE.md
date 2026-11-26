@@ -147,9 +147,9 @@ Transporte ↔ Controlador ↔ Modelo ↔ Persistencia
 
 ### Estructura actual
 ```
-package.json  tsconfig.base.json  CLAUDE.md  README.md  .gitignore  .gitattributes
+package.json  tsconfig.base.json  CLAUDE.md  README.md  GUIA.md (guía de uso)  .gitignore  .gitattributes
 scripts/  limpiar.mjs  copiar-estaticos.mjs
-          probar-servidor.mjs  demo-visor.mjs  cliente-ws.mjs   (desarrollo; ver §9)
+          (probar-servidor.mjs, demo-visor.mjs y cliente-ws.mjs viven en la rama `herramientas-prueba`; ver §9)
           preparar-linux.sh   (desarrollo en Linux; ver §9)
 src/
   compartido/   modelo.ts (DTOs = formato de campana.json, CambiosEscenario/CambiosFigura)
@@ -385,7 +385,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Capa de figuras: entrada (precarga, opacidad + desplazamiento) y salida (opacidad + escala) animadas; la
   fila se reacomoda con **FLIP**; cambio de carta/imagen → fundido breve sin mover la fila; nunca se
   reinicia al cambiar de escenario.
-- `scripts/demo-visor.mjs` recorre todos estos casos para verlos.
+- `scripts/demo-visor.mjs` (rama `herramientas-prueba`) recorre todos estos casos para verlos.
 
 ### Fase 8 — Empaquetado y README (hecha; ver §6 "Empaquetado")
 - `electron-builder`: **Windows portable** y **AppImage**, cada uno construido en su propio sistema.
@@ -405,13 +405,14 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   los tests. Repetirlo si cambian las dependencias. Luego `git pull && npm start`.
 - `npm test` → 73 tests (modelo, carga/reparación, sesión, estructura de campana.json, validación de
   mensajes, arquitectura).
-- `npm start` imprime URLs y token (en desarrollo). Con la app en marcha:
+- `npm start` imprime URLs y token (en desarrollo). Los scripts de prueba **no están en `main`**: el usuario
+  pidió dejarlos en su propia rama, `herramientas-prueba` (`git checkout herramientas-prueba -- scripts/`
+  los trae sin cambiar de rama; no hacer commit de ellos en `main`). Con la app en marcha:
   - `node scripts/probar-servidor.mjs <token> <carpeta-de-prueba>` → 31 comprobaciones de servidor
     (autorización, límite de 4, mensajes inválidos, HTTP, panel desde la IP de la LAN rechazado).
   - `node scripts/demo-visor.mjs <token> <carpeta-de-prueba> [ms]` → monta entidades con prefijo `demo:` y
     recorre 23 pasos (todas las transiciones de escenario y de figuras de la fase 7); abrir el visor en `http://127.0.0.1:8080/` para verlo.
   - Usar siempre carpetas de prueba (los scripts crean entidades).
-- Estos scripts son de desarrollo; se podrán borrar cuando el panel cubra lo mismo (preguntar al usuario).
 - Verificación visual automatizada usada en la fase 4 (los scripts estaban en un scratchpad temporal y se
   perdieron; recrearlos si hace falta): lanzar Edge headless
   (`C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe --headless=new --remote-debugging-port=N
