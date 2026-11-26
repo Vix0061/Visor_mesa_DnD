@@ -4,11 +4,11 @@ Mesa D&D pone el mapa de tu partida en una pantalla (por ejemplo, una tele tumba
 que los jugadores coloquen encima sus miniaturas. Tú, como DM, lo controlas todo desde tu ordenador; la
 pantalla de la mesa solo muestra lo que tú decides.
 
-> **¿Prisa?** Lee el [Inicio rápido](#inicio-rápido-5-minutos) y vuelve aquí cuando lo necesites.
+> **¿Prisa?** Lee el [Inicio rápido](#2-inicio-rápido-5-minutos) y vuelve aquí cuando lo necesites.
 
 **Contenido**
 1. [Cómo funciona](#1-cómo-funciona)
-2. [Inicio rápido (5 minutos)](#inicio-rápido-5-minutos)
+2. [Inicio rápido (5 minutos)](#2-inicio-rápido-5-minutos)
 3. [Las palabras que usa la aplicación](#3-las-palabras-que-usa-la-aplicación)
 4. [El panel, de un vistazo](#4-el-panel-de-un-vistazo)
 5. [Preparar la campaña](#5-preparar-la-campaña)
@@ -28,7 +28,7 @@ pantalla de la mesa solo muestra lo que tú decides.
   TU ORDENADOR (DM)                         LA MESA (jugadores)
  ┌──────────────────────┐   misma red    ┌──────────────────────┐
  │  Mesa D&D            │   wifi / cable │  Navegador web       │
- │  ─ panel de control  │ ─────────────► │  (tele, portátil,    │
+ │  ─ panel de control  │ ─────────────> │  (tele, portátil,    │
  │  ─ tus imágenes      │                │   tablet, móvil…)    │
  └──────────────────────┘                └──────────────────────┘
    aquí editas y decides                    aquí solo se mira
@@ -42,7 +42,7 @@ pantalla de la mesa solo muestra lo que tú decides.
 
 ---
 
-## Inicio rápido (5 minutos)
+## 2. Inicio rápido (5 minutos)
 
 1. **Descarga** la aplicación desde la página *Releases* del repositorio:
    - Windows: `mesa-dnd-…-windows-portable.exe` → doble clic.
@@ -87,13 +87,13 @@ pantalla de la mesa solo muestra lo que tú decides.
 │ [Abrir campaña…] [Refrescar biblioteca]  …/Mi campaña   Visor: http://…:8080/  ● │ ← barra
 ├──────────────────────┬───────────────────────────┬───────────────────────────────┤
 │ BIBLIOTECA (12)      │ ESCENARIOS                │  Formulario del elemento      │
-│ ┌──┐┌──┐┌──┐┌──┐     │ ▣ Bosque  Región Inicial  │  que hayas seleccionado       │
+│ ┌──┐┌──┐┌──┐┌──┐     │ * Bosque  Región Inicial  │  que hayas seleccionado       │
 │ └──┘└──┘└──┘└──┘     │           [Mostrado]      │  (nombre, imagen, cuadrícula, │
-│ ┌──┐┌──┐┌──┐         │ ▣ Taberna  Zona [Mostrar] │   pines, carta…)              │
+│ ┌──┐┌──┐┌──┐         │ * Taberna  Zona [Mostrar] │   pines, carta…)              │
 │ └──┘└──┘└──┘         │                           │                               │
 │                      │ FIGURAS (máx. 4)          │  ┌─────────────────────┐      │
-│ mapas/bosque.png     │ ▣ Marta  En pantalla ☑    │  │ Vista del visor     │      │
-│ [+ Zona] [+ Región]  │ ▣ Cofre               ☐   │  │ (lo que ve la mesa) │      │
+│ mapas/bosque.png     │ * Marta  En pantalla [x]  │  │ Vista del visor     │      │
+│ [+ Zona] [+ Región]  │ * Cofre               [ ] │  │ (lo que ve la mesa) │      │
 │ [+ Personaje][+ Obj.]│                           │  └─────────────────────┘      │
 └──────────────────────┴───────────────────────────┴───────────────────────────────┘
    1. tus imágenes          2. lo que has creado       3. editar y vista previa
