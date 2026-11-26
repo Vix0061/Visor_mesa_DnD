@@ -1,4 +1,4 @@
-# Mesa D&D: estado del proyecto y guía para continuar
+# Visor mesa D&D: estado del proyecto y guía para continuar
 
 Documento de traspaso entre sesiones. Recoge la especificación, todas las decisiones aprobadas por el
 usuario, el estado de cada fase y lo que falta. **Léelo entero antes de tocar código.** Lo que no esté
@@ -25,7 +25,8 @@ aquí y no se deduzca del código, pregúntalo al usuario antes de decidirlo.
 el usuario en Ubuntu con `npm run empaquetar` + `gh release upload`). Cualquier trabajo nuevo queda fuera
 del plan original: acordarlo con el usuario antes de empezar.
 `npm test` debe dar `tests 73, pass 73, fail 0`.
-El proyecto está en GitHub (repositorio privado `mesa-dnd`, rama `main`).
+El proyecto está en GitHub: repositorio privado `Vix0061/Visor_mesa_DnD` (antes `mesa-dnd`), rama `main`.
+Nombre del programa (pedido por el usuario): **Visor mesa D&D** en todo (títulos, guía, paquetes).
 
 ---
 
@@ -104,7 +105,7 @@ La usa un DM en una red local.
   `test` (compilar + `node --test "dist/pruebas/**/*.test.js"`). Multiplataforma: nada de comandos propios
   de un sistema; rutas con `path.join`.
 - Servidor en todas las interfaces, puerto en `config.json` de `app.getPath('userData')`
-  (`%APPDATA%\mesa-dnd\` / `~/.config/mesa-dnd/`), 8080 por defecto. Puerto ocupado → diálogo con la ruta
+  (`%APPDATA%\visor-mesa-dnd\` / `~/.config/visor-mesa-dnd/`), 8080 por defecto. Puerto ocupado → diálogo con la ruta
   del config y salir.
 - Al arrancar imprime las URLs IPv4 de la LAN. En desarrollo (`!app.isPackaged`) imprime también el token
   del panel.
@@ -328,13 +329,15 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Aprobado por el usuario: duraciones de la 7b y que un cambio durante una animación espere a que acabe.
 
 ### Empaquetado (fase 8)
-- `electron-builder` 26, configurado en `package.json` → `build`: `productName` **"Mesa DnD"** (el AppImage
-  rechaza "&" en el nombre de archivo; los títulos de ventana siguen siendo "Mesa D&D" porque salen del HTML),
+- `electron-builder` 26, configurado en `package.json` → `build`: `productName` **"Visor mesa DnD"** (el
+  AppImage rechaza "&" en el nombre de archivo; los títulos de ventana dicen "Visor mesa D&D": salen del HTML),
   `files` = `dist/**/*` sin `dist/pruebas` + `package.json` (las dependencias de producción, solo `ws`,
   las añade él solo). Salida en `paquetes/` (ignorada por git). Icono por defecto de Electron.
 - `npm run empaquetar` (compilar + `electron-builder`): en Windows → `portable`
-  (`mesa-dnd-<v>-windows-portable.exe`), en Linux → `AppImage` (`mesa-dnd-<v>-linux-<arch>.AppImage`).
-- userData sigue siendo `mesa-dnd` (el `name` del package.json), también empaquetado: comprobado.
+  (`visor-mesa-dnd-<v>-windows-portable.exe`), en Linux → `AppImage`
+  (`visor-mesa-dnd-<v>-linux-<arch>.AppImage`).
+- userData = `visor-mesa-dnd` (el `name` del package.json), también empaquetado. Al renombrar desde
+  `mesa-dnd` la carpeta antigua de userData quedó huérfana (solo tenía el puerto; se recrea sola).
 - npm 11 avisa de que `electron-winstaller` tiene un script de instalación sin aprobar: no se usa
   (es para el instalador Squirrel), se ignora.
 - Publicado como release `v0.1.0` en GitHub (`gh release`). Para una versión nueva: subir `version` en

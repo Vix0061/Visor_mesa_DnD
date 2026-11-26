@@ -1,6 +1,6 @@
-# Guía de uso de Mesa D&D
+# Guía de uso de Visor mesa D&D
 
-Mesa D&D pone el mapa de tu partida en una pantalla (por ejemplo, una tele tumbada sobre la mesa) para
+Visor mesa D&D pone el mapa de tu partida en una pantalla (por ejemplo, una tele tumbada sobre la mesa) para
 que los jugadores coloquen encima sus miniaturas. Tú, como DM, lo controlas todo desde tu ordenador; la
 pantalla de la mesa solo muestra lo que tú decides.
 
@@ -27,7 +27,7 @@ pantalla de la mesa solo muestra lo que tú decides.
 ```
   TU ORDENADOR (DM)                         LA MESA (jugadores)
  ┌──────────────────────┐   misma red    ┌──────────────────────┐
- │  Mesa D&D            │   wifi / cable │  Navegador web       │
+ │  Visor mesa D&D      │   wifi / cable │  Navegador web       │
  │  ─ panel de control  │ ─────────────> │  (tele, portátil,    │
  │  ─ tus imágenes      │                │   tablet, móvil…)    │
  └──────────────────────┘                └──────────────────────┘
@@ -45,8 +45,8 @@ pantalla de la mesa solo muestra lo que tú decides.
 ## 2. Inicio rápido (5 minutos)
 
 1. **Descarga** la aplicación desde la página *Releases* del repositorio:
-   - Windows: `mesa-dnd-…-windows-portable.exe` → doble clic.
-   - Linux: `mesa-dnd-…-linux-x86_64.AppImage` → `chmod +x` y doble clic.
+   - Windows: `visor-mesa-dnd-…-windows-portable.exe` → doble clic.
+   - Linux: `visor-mesa-dnd-…-linux-x86_64.AppImage` → `chmod +x` y doble clic.
 
    La primera vez, Windows puede mostrar dos avisos: *SmartScreen* (pulsa **Más información → Ejecutar
    de todas formas**) y el **firewall** (marca **redes privadas** y pulsa **Permitir**). Ver
@@ -264,7 +264,7 @@ queda "encadenando" animaciones.
 | Problema | Solución |
 |---|---|
 | Windows dice **"Windows protegió su PC"** | El programa no está firmado. **Más información → Ejecutar de todas formas.** |
-| **La mesa no conecta** (la página no carga en otro dispositivo) | 1) Que ambos estén en la **misma wifi/red**. 2) Firewall de Windows: *Seguridad de Windows → Firewall y protección de red → Permitir una aplicación a través del firewall* → marca **Mesa DnD** en **Privada**. 3) Que la red de Windows esté como **privada**, no pública. 4) En Linux con `ufw`: `sudo ufw allow 8080/tcp`. 5) Prueba otra de las direcciones de la barra. |
+| **La mesa no conecta** (la página no carga en otro dispositivo) | 1) Que ambos estén en la **misma wifi/red**. 2) Firewall de Windows: *Seguridad de Windows → Firewall y protección de red → Permitir una aplicación a través del firewall* → marca **Visor mesa DnD** en **Privada**. 3) Que la red de Windows esté como **privada**, no pública. 4) En Linux con `ufw`: `sudo ufw allow 8080/tcp`. 5) Prueba otra de las direcciones de la barra. |
 | En el propio ordenador funciona pero en otros no | Es casi siempre el firewall o la red pública (ver arriba). |
 | **"El puerto 8080 ya está en uso por otro programa"** al arrancar | Otro programa lo usa (o la aplicación ya está abierta). Ciérralo, o cambia el puerto en `config.json` (ver abajo). |
 | Una imagen nueva **no aparece** en la Biblioteca | Pulsa **Refrescar biblioteca**. Comprueba el formato (no SVG) y que el nombre no empiece por punto. |
@@ -280,8 +280,8 @@ queda "encadenando" animaciones.
 
 ### Cambiar el puerto
 Edita `config.json` y vuelve a abrir la aplicación:
-- Windows: pega `%APPDATA%\mesa-dnd` en la barra del Explorador de archivos.
-- Linux: `~/.config/mesa-dnd/config.json`.
+- Windows: pega `%APPDATA%\visor-mesa-dnd` en la barra del Explorador de archivos.
+- Linux: `~/.config/visor-mesa-dnd/config.json`.
 
 ```json
 { "puerto": 8081 }

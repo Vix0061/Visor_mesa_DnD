@@ -18,8 +18,8 @@ En la página [Releases](../../releases) del repositorio:
 
 | Sistema | Archivo | Cómo abrirlo |
 |---|---|---|
-| Windows | `mesa-dnd-<versión>-windows-portable.exe` | Doble clic. No se instala. |
-| Linux | `mesa-dnd-<versión>-linux-x86_64.AppImage` | `chmod +x mesa-dnd-*.AppImage` y doble clic (o `./mesa-dnd-*.AppImage`). |
+| Windows | `visor-mesa-dnd-<versión>-windows-portable.exe` | Doble clic. No se instala. |
+| Linux | `visor-mesa-dnd-<versión>-linux-x86_64.AppImage` | `chmod +x visor-mesa-dnd-*.AppImage` y doble clic (o `./visor-mesa-dnd-*.AppImage`). |
 
 Solo el DM necesita la aplicación. Los jugadores solo necesitan un navegador.
 
@@ -62,8 +62,8 @@ webp) queda mejor.
 Por defecto es el **8080**. Si está ocupado, la aplicación avisa y se cierra. Para cambiarlo, edita
 `config.json` (se crea al arrancar por primera vez) y vuelve a abrir la aplicación:
 
-- Windows: `%APPDATA%\mesa-dnd\config.json`
-- Linux: `~/.config/mesa-dnd/config.json`
+- Windows: `%APPDATA%\visor-mesa-dnd\config.json`
+- Linux: `~/.config/visor-mesa-dnd/config.json`
 
 ```json
 { "puerto": 8080 }

@@ -70,7 +70,7 @@ function crearVentanaPanel(puerto: number, token: string): void {
   const ventana = new BrowserWindow({
     width: 1280,
     height: 800,
-    title: 'Mesa D&D - Panel del DM',
+    title: 'Visor mesa D&D - Panel del DM',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

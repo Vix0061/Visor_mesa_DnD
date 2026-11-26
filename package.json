@@ -1,5 +1,5 @@
 {
-  "name": "mesa-dnd",
+  "name": "visor-mesa-dnd",
   "version": "0.1.0",
   "description": "Escenarios de D&D en pantalla para minis fisicas: panel del DM y visor en red local.",
   "private": true,
@@ -13,8 +13,8 @@
     "empaquetar": "npm run compilar && electron-builder"
   },
   "build": {
-    "appId": "io.github.vix0061.mesadnd",
-    "productName": "Mesa DnD",
+    "appId": "io.github.vix0061.visormesadnd",
+    "productName": "Visor mesa DnD",
     "directories": {
       "output": "paquetes"
     },
@@ -25,12 +25,12 @@
     ],
     "win": {
       "target": "portable",
-      "artifactName": "mesa-dnd-${version}-windows-portable.${ext}"
+      "artifactName": "visor-mesa-dnd-${version}-windows-portable.${ext}"
     },
     "linux": {
       "target": "AppImage",
       "category": "Game",
-      "artifactName": "mesa-dnd-${version}-linux-${arch}.${ext}"
+      "artifactName": "visor-mesa-dnd-${version}-linux-${arch}.${ext}"
     }
   },
   "devDependencies": {
