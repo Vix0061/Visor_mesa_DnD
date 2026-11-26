@@ -340,7 +340,9 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   `mesa-dnd` la carpeta antigua de userData quedó huérfana (solo tenía el puerto; se recrea sola).
 - npm 11 avisa de que `electron-winstaller` tiene un script de instalación sin aprobar: no se usa
   (es para el instalador Squirrel), se ignora.
-- Publicado como release `v0.1.0` en GitHub (`gh release`). Para una versión nueva: subir `version` en
+- Publicado como release `v0.1.0` en GitHub (`gh release`). Su AppImage es el de antes del cambio de
+  nombre (`mesa-dnd-0.1.0-linux-x86_64.AppImage`, por dentro "Mesa DnD", userData `mesa-dnd`): el usuario
+  decidió dejarlo así. Desde la próxima versión, todo con el nombre nuevo. Para una versión nueva: subir `version` en
   `package.json`, empaquetar en cada sistema y `gh release create vX.Y.Z <archivos>` / `gh release upload`.
 
 ## 7. Mensajes WebSocket (definición exacta en `src/compartido/mensajes.ts`)
