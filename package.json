@@ -9,12 +9,35 @@
     "limpiar": "node scripts/limpiar.mjs",
     "compilar": "npm run limpiar && tsc -p src/servidor && tsc -p src/visor && tsc -p src/panel && node scripts/copiar-estaticos.mjs",
     "start": "npm run compilar && electron .",
-    "test": "npm run compilar && node --test \"dist/pruebas/**/*.test.js\""
+    "test": "npm run compilar && node --test \"dist/pruebas/**/*.test.js\"",
+    "empaquetar": "npm run compilar && electron-builder"
+  },
+  "build": {
+    "appId": "io.github.vix0061.mesadnd",
+    "productName": "Mesa D&D",
+    "directories": {
+      "output": "paquetes"
+    },
+    "files": [
+      "dist/**/*",
+      "!dist/pruebas{,/**/*}",
+      "package.json"
+    ],
+    "win": {
+      "target": "portable",
+      "artifactName": "mesa-dnd-${version}-windows-portable.${ext}"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Game",
+      "artifactName": "mesa-dnd-${version}-linux-${arch}.${ext}"
+    }
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/ws": "^8.18.2",
     "electron": "^45.3.2",
+    "electron-builder": "^26.18.0",
     "typescript": "^7.0.2"
   },
   "dependencies": {

@@ -19,9 +19,10 @@ aquí y no se deduzca del código, pregúntalo al usuario antes de decidirlo.
 | 6 | Editor de pines, cambio de tipo con aviso, región inicial, imagen faltante | ✅ Confirmada (Windows y Linux/Ubuntu) |
 | 7a | Animaciones de la capa de escenario y precarga de sus imágenes | ✅ Confirmada |
 | 7b | Animaciones de la capa de figuras (entrada, salida, FLIP, cambio de carta/imagen) | ✅ Confirmada |
-| 8 | Empaquetado y README | Pendiente |
+| 8 | Empaquetado y README | ⏳ **Entregada, pendiente de confirmación** (portable de Windows probado; AppImage lo construye el usuario en Ubuntu) |
 
-**Siguiente paso:** fase 8 (empaquetado y README).
+**Siguiente paso:** que el usuario construya el AppImage en Ubuntu, lo suba a la release `v0.1.0` y
+confirme la fase 8. Con eso el plan queda completo.
 `npm test` debe dar `tests 73, pass 73, fail 0`.
 El proyecto está en GitHub (repositorio privado `mesa-dnd`, rama `main`).
 
@@ -96,7 +97,7 @@ La usa un DM en una red local.
 
 - TypeScript 7 en todo el proyecto, **ESM** (`"type": "module"`). Electron 45. Node 26 LTS.
 - Dependencia de ejecución: `ws`. Desarrollo: `electron`, `typescript`, `@types/node`, `@types/ws`
-  (`electron-builder` se añadirá en la fase 8). Sin empaquetador: `tsc` emite módulos ES que el
+  y `electron-builder` (fase 8). Sin empaquetador: `tsc` emite módulos ES que el
   navegador carga directamente (comprobado que funciona desde `file://` en la ventana del panel).
 - Scripts npm: `compilar` (limpiar + tsc ×3 + copiar html/css), `start` (compilar + electron .),
   `test` (compilar + `node --test "dist/pruebas/**/*.test.js"`). Multiplataforma: nada de comandos propios
@@ -145,7 +146,7 @@ Transporte ↔ Controlador ↔ Modelo ↔ Persistencia
 
 ### Estructura actual
 ```
-package.json  tsconfig.base.json  CLAUDE.md  .gitignore
+package.json  tsconfig.base.json  CLAUDE.md  README.md  .gitignore  .gitattributes
 scripts/  limpiar.mjs  copiar-estaticos.mjs
           probar-servidor.mjs  demo-visor.mjs  cliente-ws.mjs   (desarrollo; ver §9)
           preparar-linux.sh   (desarrollo en Linux; ver §9)
@@ -325,6 +326,17 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   (p. ej. al reconectar) no anima nada.
 - Aprobado por el usuario: duraciones de la 7b y que un cambio durante una animación espere a que acabe.
 
+### Empaquetado (fase 8)
+- `electron-builder` 26, configurado en `package.json` → `build`: `productName` "Mesa D&D",
+  `files` = `dist/**/*` sin `dist/pruebas` + `package.json` (las dependencias de producción, solo `ws`,
+  las añade él solo). Salida en `paquetes/` (ignorada por git). Icono por defecto de Electron.
+- `npm run empaquetar` (compilar + `electron-builder`): en Windows → `portable`
+  (`mesa-dnd-<v>-windows-portable.exe`), en Linux → `AppImage` (`mesa-dnd-<v>-linux-<arch>.AppImage`).
+- userData sigue siendo `mesa-dnd` (el `name` del package.json), también empaquetado: comprobado.
+- npm 11 avisa de que `electron-winstaller` tiene un script de instalación sin aprobar: no se usa
+  (es para el instalador Squirrel), se ignora.
+- Publicado como release `v0.1.0` en GitHub (`gh release`).
+
 ## 7. Mensajes WebSocket (definición exacta en `src/compartido/mensajes.ts`)
 
 - **Panel → servidor**: `abrirCampana {carpeta, crear?}`, `refrescarBiblioteca`,
@@ -372,7 +384,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   reinicia al cambiar de escenario.
 - `scripts/demo-visor.mjs` recorre todos estos casos para verlos.
 
-### Fase 8 — Empaquetado y README
+### Fase 8 — Empaquetado y README (hecha; ver §6 "Empaquetado")
 - `electron-builder`: **Windows portable** y **AppImage**, cada uno construido en su propio sistema.
 - `dist/pruebas` debe quedar **fuera** del paquete.
 - README: permiso del firewall de Windows (permitir en redes privadas; si la red está marcada como pública
@@ -417,6 +429,9 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Fase 7a: Edge headless en el visor sondeando cada 80 ms `getAnimations()` de cada `.lienzo`, sus pines
   y su cuadrícula (keyframes, `transform-origin`), mientras corre `demo-visor.mjs` con 2500 ms por paso;
   más una captura a mitad de cada transición. Carpeta de prueba: solo `mapas/` y `retratos/`.
+- Fase 8: el portable lanzado con `--remote-debugging-port=9333` (los argumentos llegan a Electron):
+  visor y sus módulos servidos desde el asar, WS de visor, panel conectado con `window.nativo`, campaña
+  abierta por WS (token leído de la URL del panel por CDP) e imagen servida.
 - Fase 7b: igual, sondeando `getAnimations({ subtree: true })` de cada `.figura` (clase `saliendo`,
   keyframes de entrada/salida/FLIP, fundidos de carta y retrato) y su posición en reposo.
 

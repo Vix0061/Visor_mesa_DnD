@@ -13,3 +13,6 @@ campana.json.tmp
 # Configuración local
 .env
 .claude/settings.local.json
+
+# Paquetes de electron-builder (fase 8)
+/paquetes/
