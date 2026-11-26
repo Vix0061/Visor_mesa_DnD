@@ -5,6 +5,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+# Con sudo, nvm y Node acabarían en /root y tu usuario no los vería. sudo se pide solo donde hace falta.
+if [ "$(id -u)" -eq 0 ]; then
+  echo "No ejecutes este script con sudo: usa  bash scripts/preparar-linux.sh"
+  exit 1
+fi
+
 # 1. Node 26 con nvm (el de apt suele ser antiguo). nvm se instala en ~/.nvm, sin sudo.
 node_valido() {
   command -v node >/dev/null && [ "$(node -p 'process.versions.node.split(".")[0]')" -ge 26 ]
