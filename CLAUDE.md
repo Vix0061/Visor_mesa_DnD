@@ -146,6 +146,7 @@ Transporte ↔ Controlador ↔ Modelo ↔ Persistencia
 package.json  tsconfig.base.json  CLAUDE.md  .gitignore
 scripts/  limpiar.mjs  copiar-estaticos.mjs
           probar-servidor.mjs  demo-visor.mjs  cliente-ws.mjs   (desarrollo; ver §9)
+          preparar-linux.sh   (desarrollo en Linux; ver §9)
 src/
   compartido/   modelo.ts (DTOs = formato de campana.json, CambiosEscenario/CambiosFigura)
                 mensajes.ts (todos los mensajes WS)  errores.ts (CodigoError)
@@ -350,6 +351,10 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 
 ## 9. Cómo verificar
 
+- **Linux (desarrollo)**: tras clonar, `bash scripts/preparar-linux.sh` (aprobado por el usuario): comprueba
+  Node ≥ 26, `npm install`, descarga el binario de Electron (`node node_modules/electron/install.js`),
+  pone SUID de root a `chrome-sandbox` (sin eso Ubuntu 24.04+ no arranca Electron sin empaquetar) y pasa
+  los tests. Repetirlo si cambian las dependencias. Luego `git pull && npm start`.
 - `npm test` → 73 tests (modelo, carga/reparación, sesión, estructura de campana.json, validación de
   mensajes, arquitectura).
 - `npm start` imprime URLs y token (en desarrollo). Con la app en marcha:
