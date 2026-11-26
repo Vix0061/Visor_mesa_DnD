@@ -1,4 +1,4 @@
-# Mesa D&D
+# Visor mesa D&D
 
 Muestra escenarios de D&D en una pantalla (por ejemplo, una tele tumbada sobre la mesa) sobre la que se
 colocan las minis físicas. El DM lo controla todo desde su ordenador; la pantalla de los jugadores es un
