@@ -1,0 +1,15 @@
+node_modules/
+dist/
+
+# Carpetas de prueba en la raíz (imágenes y campana.json); con "/" para no ignorar src/pruebas
+/test1/
+/test*/
+/prueba*/
+/campana*/
+campana.json
+campana.json.bak
+campana.json.tmp
+
+# Configuración local
+.env
+.claude/settings.local.json

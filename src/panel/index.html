@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src ws://127.0.0.1:*; frame-src http://127.0.0.1:*; img-src 'self' http://127.0.0.1:*"
+    />
+    <title>Mesa D&amp;D - Panel del DM</title>
+    <link rel="stylesheet" href="./panel.css" />
+  </head>
+  <body>
+    <header id="barra" class="barra">
+      <button name="abrir" type="button" class="principal">Abrir campaña…</button>
+      <button name="refrescar" type="button">Refrescar biblioteca</button>
+      <span data-campo="carpeta" class="carpeta"></span>
+      <span data-campo="urls" class="urls"></span>
+      <span data-campo="conexion" class="conexion"></span>
+    </header>
+
+    <div id="avisos" class="avisos" aria-live="polite"></div>
+
+    <main class="columnas">
+      <section id="biblioteca" class="columna biblioteca" aria-label="Biblioteca">
+        <h2>Biblioteca <span data-campo="total" class="tenue"></span></h2>
+        <div data-campo="imagenes" class="rejilla"></div>
+        <div class="crear">
+          <p data-campo="elegida" class="tenue"></p>
+          <div class="botones">
+            <button type="button" data-crear="zona">+ Zona</button>
+            <button type="button" data-crear="region">+ Región</button>
+            <button type="button" data-crear="personaje">+ Personaje</button>
+            <button type="button" data-crear="objeto">+ Objeto</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="columna entidades" aria-label="Entidades">
+        <h2>Escenarios</h2>
+        <ul id="lista-escenarios" class="lista"></ul>
+        <h2>Figuras <span class="tenue">(máx. 4 en pantalla)</span></h2>
+        <ul id="lista-figuras" class="lista"></ul>
+      </section>
+
+      <section class="columna detalle" aria-label="Detalle">
+        <p id="sin-seleccion" class="tenue">Selecciona un escenario o una figura para editarlo.</p>
+
+        <div id="form-escenario" class="formulario" hidden>
+          <h2 data-campo="titulo"></h2>
+          <div class="fila-campos">
+            <label class="ancho">Nombre (solo lo ves tú) <input name="nombre" type="text" /></label>
+            <label>Tipo
+              <select name="tipo">
+                <option value="region">Región</option>
+                <option value="zona">Zona</option>
+              </select>
+            </label>
+          </div>
+          <label>Imagen <select name="imagen"></select></label>
+          <p class="falta-imagen" data-campo="falta">La imagen no está en la carpeta: los jugadores verán un fondo neutro.</p>
+          <fieldset>
+            <legend>Cuadrícula</legend>
+            <div class="fila-campos">
+              <label class="casilla"><input name="cuadriculaVisible" type="checkbox" /> Visible</label>
+              <label>Celda (px) <input name="tamanoCelda" type="number" min="1" step="any" /></label>
+              <label>Desplaz. X (px) <input name="desplazamientoX" type="number" step="any" /></label>
+              <label>Desplaz. Y (px) <input name="desplazamientoY" type="number" step="any" /></label>
+            </div>
+          </fieldset>
+          <fieldset id="editor-pines" class="editor-pines">
+            <legend>Pines</legend>
+            <div data-campo="lamina" class="lamina"></div>
+            <div class="controles-pines">
+              <label>Destino del pin nuevo <select name="destinoNuevo"></select></label>
+              <p data-campo="ayuda" class="tenue"></p>
+              <ol data-campo="lista" class="lista-pines"></ol>
+            </div>
+          </fieldset>
+          <div class="acciones">
+            <button name="inicial" type="button"></button>
+            <button name="activar" type="button" class="principal"></button>
+            <button name="borrar" type="button" class="peligro">Borrar</button>
+          </div>
+        </div>
+
+        <div id="form-figura" class="formulario" hidden>
+          <h2 data-campo="titulo"></h2>
+          <div class="fila-campos">
+            <label class="ancho">Nombre (solo lo ves tú) <input name="nombre" type="text" /></label>
+            <label>Tipo
+              <select name="tipo">
+                <option value="personaje">Personaje</option>
+                <option value="objeto">Objeto</option>
+              </select>
+            </label>
+          </div>
+          <label>Imagen <select name="imagen"></select></label>
+          <p class="falta-imagen" data-campo="falta">La imagen no está en la carpeta: los jugadores verán una silueta.</p>
+          <fieldset>
+            <legend>Carta</legend>
+            <label class="casilla"><input name="conCarta" type="checkbox" /> Mostrar carta bajo el retrato</label>
+            <label>Nombre en la carta <input name="cartaNombre" type="text" /></label>
+            <label>Descripción <textarea name="cartaDescripcion" rows="4"></textarea></label>
+          </fieldset>
+          <div class="acciones">
+            <button name="borrar" type="button" class="peligro">Borrar</button>
+          </div>
+        </div>
+
+        <div class="marco-visor">
+          <h2>Vista del visor</h2>
+          <iframe id="visor" title="Vista del visor"></iframe>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="dialogo">
+      <form method="dialog">
+        <p data-campo="texto"></p>
+        <div class="acciones">
+          <button value="no">Cancelar</button>
+          <button value="si" data-campo="aceptar" class="principal">Aceptar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="./principal.js"></script>
+  </body>
+</html>

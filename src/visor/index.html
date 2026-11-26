@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'self' ws:; img-src 'self'; style-src 'self'; script-src 'self'"
+    />
+    <title>Mesa D&amp;D</title>
+    <link rel="stylesheet" href="./visor.css" />
+  </head>
+  <body>
+    <!-- Capa 1: escenario (la pantalla de espera queda debajo de los lienzos) -->
+    <main id="escenario" class="capa-escenario">
+      <p class="espera">Esperando al DM</p>
+    </main>
+    <!-- Capa 2: figuras, encima del escenario -->
+    <section id="figuras" class="capa-figuras" aria-label="Figuras"></section>
+    <div id="conexion" class="indicador-conexion" role="status" hidden>Reconectando…</div>
+    <script type="module" src="./principal.js"></script>
+  </body>
+</html>

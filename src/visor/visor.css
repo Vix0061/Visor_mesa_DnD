@@ -1,0 +1,246 @@
+:root {
+  --fondo: #0b0c0f;
+  --fondo-centro: #1d1a16;
+  --oro: #d6b46a;
+  --oro-claro: #f0d79a;
+  --pergamino: #ddd5c4;
+  --tinta-tenue: #a8986f;
+  --carta-fondo: rgba(16, 14, 12, 0.84);
+  --linea-cuadricula: rgba(255, 255, 255, 0.38);
+  --serif: Georgia, 'Palatino Linotype', 'Book Antiqua', serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Gana a cualquier display de las clases: hidden siempre oculta. */
+[hidden] {
+  display: none !important;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--fondo);
+  color: var(--pergamino);
+  font-family: var(--serif);
+}
+
+/* ---- Capa 1: escenario ---- */
+
+.capa-escenario {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(ellipse at center, var(--fondo-centro) 0%, var(--fondo) 70%);
+}
+
+/* Espera y lienzos ocupan la misma celda: se apilan en vez de desplazarse. */
+.capa-escenario > * {
+  grid-area: 1 / 1;
+}
+
+.espera {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-size: clamp(18px, 4vh, 48px);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--tinta-tenue);
+}
+
+.espera::before,
+.espera::after {
+  content: '';
+  width: 8vw;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--tinta-tenue));
+}
+
+.espera::after {
+  transform: scaleX(-1);
+}
+
+.con-escenario .espera {
+  visibility: hidden;
+}
+
+/* Caja con la proporción de la imagen, lo más grande posible sin recortar (contain). */
+.lienzo {
+  --ancho: 16;
+  --alto: 9;
+  position: relative;
+  aspect-ratio: var(--ancho) / var(--alto);
+  width: min(100vw, calc(100vh * var(--ancho) / var(--alto)));
+}
+
+.lienzo > .fondo,
+.lienzo > .cuadricula,
+.lienzo > .pines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lienzo > .fondo {
+  display: block;
+}
+
+.lienzo.imagen-faltante {
+  background: repeating-linear-gradient(45deg, #1f1d1a 0 24px, #24211d 24px 48px);
+}
+
+.lienzo.imagen-faltante > .fondo {
+  visibility: hidden;
+}
+
+.cuadricula path {
+  fill: none;
+  stroke: var(--linea-cuadricula);
+  stroke-width: 1;
+  /* El grosor no escala con la imagen: siempre 1 px en pantalla. */
+  vector-effect: non-scaling-stroke;
+  shape-rendering: crispEdges;
+}
+
+.pin {
+  position: absolute;
+  width: clamp(16px, 2.6vmin, 40px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at 35% 35%, #fff4cf 0%, var(--oro) 45%, #8a6a2a 100%);
+  border: 2px solid rgba(255, 246, 213, 0.9);
+  box-shadow:
+    0 0 0 4px rgba(214, 180, 106, 0.25),
+    0 0 18px 4px rgba(240, 215, 154, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Capa 2: figuras ---- */
+
+.capa-figuras {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2vw;
+  pointer-events: none;
+}
+
+/* Hueco fijo: siempre caben 4 y no cambia de tamaño cuando entra o sale otra. */
+.figura {
+  position: relative;
+  margin: 0;
+  width: 22vw;
+}
+
+.retrato {
+  width: 100%;
+  height: 40vh;
+}
+
+.retrato img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 1.2vh 1.6vh rgba(0, 0, 0, 0.75));
+}
+
+/* Silueta cuando la imagen no carga. */
+.retrato.imagen-faltante {
+  background:
+    radial-gradient(circle at 50% 28%, #3b352d 0 13%, transparent 13.5%),
+    radial-gradient(ellipse 32% 34% at 50% 80%, #3b352d 0 99%, transparent 100%);
+}
+
+.retrato.imagen-faltante img {
+  visibility: hidden;
+}
+
+/* La carta cuelga bajo el retrato, fuera del flujo: así la fila se centra por
+   los retratos y una figura sin carta no queda desalineada. */
+.carta {
+  position: absolute;
+  top: calc(100% + 1.4vh);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 100%;
+  padding: 0.9vh 1.2vw 1.1vh;
+  text-align: center;
+  background: var(--carta-fondo);
+  border: 1px solid rgba(214, 180, 106, 0.55);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 3px rgba(0, 0, 0, 0.35),
+    0 6px 18px rgba(0, 0, 0, 0.55);
+}
+
+/* Textos largos: las palabras sin espacios se parten para no salirse de la
+   caja, y se corta con "…" a partir de 2 líneas (nombre) o 4 (descripción)
+   para que la carta no tape la pantalla ni se salga por abajo. */
+.carta h2,
+.carta p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.carta h2 {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  margin: 0;
+  font-size: clamp(14px, 2.6vh, 34px);
+  font-weight: normal;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--oro-claro);
+}
+
+.carta p {
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  margin: 0.5vh 0 0;
+  font-size: clamp(11px, 1.7vh, 22px);
+  line-height: 1.35;
+  font-style: italic;
+  color: var(--pergamino);
+  white-space: pre-line; /* respeta los saltos de línea que el DM escribe con Intro */
+}
+
+/* ---- Indicador de conexión ---- */
+
+.indicador-conexion {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.45em 0.9em;
+  font: 13px system-ui, 'Segoe UI', sans-serif;
+  color: #f3e6c4;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 999px;
+}
+
+.indicador-conexion::before {
+  content: '';
+  width: 0.6em;
+  height: 0.6em;
+  border-radius: 50%;
+  background: #d9822b;
+}

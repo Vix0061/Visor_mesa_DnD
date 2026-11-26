@@ -1,0 +1,23 @@
+{
+  "name": "mesa-dnd",
+  "version": "0.1.0",
+  "description": "Escenarios de D&D en pantalla para minis fisicas: panel del DM y visor en red local.",
+  "private": true,
+  "type": "module",
+  "main": "dist/servidor/principal.js",
+  "scripts": {
+    "limpiar": "node scripts/limpiar.mjs",
+    "compilar": "npm run limpiar && tsc -p src/servidor && tsc -p src/visor && tsc -p src/panel && node scripts/copiar-estaticos.mjs",
+    "start": "npm run compilar && electron .",
+    "test": "npm run compilar && node --test \"dist/pruebas/**/*.test.js\""
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/ws": "^8.18.2",
+    "electron": "^45.3.2",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "ws": "^8.23.0"
+  }
+}
