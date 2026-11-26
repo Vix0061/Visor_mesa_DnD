@@ -351,8 +351,8 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 
 ## 9. Cómo verificar
 
-- **Linux (desarrollo)**: tras clonar, `bash scripts/preparar-linux.sh` (aprobado por el usuario): comprueba
-  Node ≥ 26, `npm install`, descarga el binario de Electron (`node node_modules/electron/install.js`),
+- **Linux (desarrollo)**: tras clonar, `bash scripts/preparar-linux.sh` (aprobado por el usuario): si falta Node ≥ 26
+  lo instala (curl por apt si falta, nvm en ~/.nvm, `nvm install 26`), `npm install`, descarga el binario de Electron (`node node_modules/electron/install.js`),
   pone SUID de root a `chrome-sandbox` (sin eso Ubuntu 24.04+ no arranca Electron sin empaquetar) y pasa
   los tests. Repetirlo si cambian las dependencias. Luego `git pull && npm start`.
 - `npm test` → 73 tests (modelo, carga/reparación, sesión, estructura de campana.json, validación de
