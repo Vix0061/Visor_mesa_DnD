@@ -19,10 +19,11 @@ aquí y no se deduzca del código, pregúntalo al usuario antes de decidirlo.
 | 6 | Editor de pines, cambio de tipo con aviso, región inicial, imagen faltante | ✅ Confirmada (Windows y Linux/Ubuntu) |
 | 7a | Animaciones de la capa de escenario y precarga de sus imágenes | ✅ Confirmada |
 | 7b | Animaciones de la capa de figuras (entrada, salida, FLIP, cambio de carta/imagen) | ✅ Confirmada |
-| 8 | Empaquetado y README | ⏳ **Entregada, pendiente de confirmación** (portable de Windows probado; AppImage lo construye el usuario en Ubuntu) |
+| 8 | Empaquetado y README | ✅ Confirmada (portable de Windows y AppImage probados) |
 
-**Siguiente paso:** que el usuario construya el AppImage en Ubuntu, lo suba a la release `v0.1.0` y
-confirme la fase 8. Con eso el plan queda completo.
+**Plan completo.** Release `v0.1.0` en GitHub con el portable de Windows y el AppImage (construido por
+el usuario en Ubuntu con `npm run empaquetar` + `gh release upload`). Cualquier trabajo nuevo queda fuera
+del plan original: acordarlo con el usuario antes de empezar.
 `npm test` debe dar `tests 73, pass 73, fail 0`.
 El proyecto está en GitHub (repositorio privado `mesa-dnd`, rama `main`).
 
@@ -336,7 +337,8 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - userData sigue siendo `mesa-dnd` (el `name` del package.json), también empaquetado: comprobado.
 - npm 11 avisa de que `electron-winstaller` tiene un script de instalación sin aprobar: no se usa
   (es para el instalador Squirrel), se ignora.
-- Publicado como release `v0.1.0` en GitHub (`gh release`).
+- Publicado como release `v0.1.0` en GitHub (`gh release`). Para una versión nueva: subir `version` en
+  `package.json`, empaquetar en cada sistema y `gh release create vX.Y.Z <archivos>` / `gh release upload`.
 
 ## 7. Mensajes WebSocket (definición exacta en `src/compartido/mensajes.ts`)
 
