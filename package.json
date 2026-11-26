@@ -14,7 +14,7 @@
   },
   "build": {
     "appId": "io.github.vix0061.mesadnd",
-    "productName": "Mesa D&D",
+    "productName": "Mesa DnD",
     "directories": {
       "output": "paquetes"
     },

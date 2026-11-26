@@ -327,7 +327,8 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Aprobado por el usuario: duraciones de la 7b y que un cambio durante una animación espere a que acabe.
 
 ### Empaquetado (fase 8)
-- `electron-builder` 26, configurado en `package.json` → `build`: `productName` "Mesa D&D",
+- `electron-builder` 26, configurado en `package.json` → `build`: `productName` **"Mesa DnD"** (el AppImage
+  rechaza "&" en el nombre de archivo; los títulos de ventana siguen siendo "Mesa D&D" porque salen del HTML),
   `files` = `dist/**/*` sin `dist/pruebas` + `package.json` (las dependencias de producción, solo `ws`,
   las añade él solo). Salida en `paquetes/` (ignorada por git). Icono por defecto de Electron.
 - `npm run empaquetar` (compilar + `electron-builder`): en Windows → `portable`
