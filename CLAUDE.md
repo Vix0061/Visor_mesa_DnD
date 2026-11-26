@@ -18,10 +18,10 @@ aquí y no se deduzca del código, pregúntalo al usuario antes de decidirlo.
 | 5 | Panel básico | ✅ Confirmada (Windows y Linux/Ubuntu) |
 | 6 | Editor de pines, cambio de tipo con aviso, región inicial, imagen faltante | ✅ Confirmada (Windows y Linux/Ubuntu) |
 | 7a | Animaciones de la capa de escenario y precarga de sus imágenes | ✅ Confirmada |
-| 7b | Animaciones de la capa de figuras (entrada, salida, FLIP, cambio de carta/imagen) | Pendiente |
+| 7b | Animaciones de la capa de figuras (entrada, salida, FLIP, cambio de carta/imagen) | ✅ Confirmada |
 | 8 | Empaquetado y README | Pendiente |
 
-**Siguiente paso:** fase 7b (animaciones de la capa de figuras).
+**Siguiente paso:** fase 8 (empaquetado y README).
 `npm test` debe dar `tests 73, pass 73, fail 0`.
 El proyecto está en GitHub (repositorio privado `mesa-dnd`, rama `main`).
 
@@ -312,6 +312,19 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - La pantalla de espera queda siempre debajo y se funde con una transición CSS de `opacity`.
   `.capa-escenario` tiene `overflow: hidden` por el zoom.
 
+### Visor (fase 7b, capa de figuras)
+- `CapaFiguras` procesa en serie con el último objetivo, igual que la capa de escenario.
+- Precarga: las tarjetas nuevas se crean y `preparar()` (`img.decode()`) antes de tocar la fila; si la
+  imagen falla, silueta. Una imagen cambiada se precarga mientras se sigue viendo la anterior.
+- FLIP: se miden las tarjetas antes del cambio; las que salen pasan a `.figura.saliendo`
+  (`position: absolute` con left/top medidos) para que la fila se recoloque mientras se desvanecen
+  (opacidad + escala 0,85, 400 ms); las nuevas entran subiendo 4vh con fundido (500 ms); las que siguen
+  parten de su posición anterior con `translate` (450 ms). Desplazamientos < 0,5 px no se animan.
+- Cambio de carta o de imagen (`TarjetaFigura.actualizar`): fundido de 180 ms de salida y de entrada de
+  la carta o del retrato; la carta cuelga fuera del flujo, así que la fila no se mueve. Sin cambios
+  (p. ej. al reconectar) no anima nada.
+- Aprobado por el usuario: duraciones de la 7b y que un cambio durante una animación espere a que acabe.
+
 ## 7. Mensajes WebSocket (definición exacta en `src/compartido/mensajes.ts`)
 
 - **Panel → servidor**: `abrirCampana {carpeta, crear?}`, `refrescarBiblioteca`,
@@ -335,7 +348,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 
 ## 8. Lo que falta (compromisos aprobados por fase)
 
-### Fase 7 — Animaciones (dividida: 7a capa de escenario, hecha; 7b capa de figuras, pendiente)
+### Fase 7 — Animaciones (dividida: 7a capa de escenario y 7b capa de figuras; ver §6)
 - CSS / Web Animations API sobre `transform` y `opacity` únicamente. Las animaciones son exclusivas de la
   vista del cliente; el servidor no envía nada sobre animación: el visor deduce la transición comparando lo
   que tiene en pantalla con lo que llega.
@@ -381,7 +394,7 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
   - `node scripts/probar-servidor.mjs <token> <carpeta-de-prueba>` → 31 comprobaciones de servidor
     (autorización, límite de 4, mensajes inválidos, HTTP, panel desde la IP de la LAN rechazado).
   - `node scripts/demo-visor.mjs <token> <carpeta-de-prueba> [ms]` → monta entidades con prefijo `demo:` y
-    recorre 20 pasos (incluye todas las transiciones de escenario de la fase 7a); abrir el visor en `http://127.0.0.1:8080/` para verlo.
+    recorre 23 pasos (todas las transiciones de escenario y de figuras de la fase 7); abrir el visor en `http://127.0.0.1:8080/` para verlo.
   - Usar siempre carpetas de prueba (los scripts crean entidades).
 - Estos scripts son de desarrollo; se podrán borrar cuando el panel cubra lo mismo (preguntar al usuario).
 - Verificación visual automatizada usada en la fase 4 (los scripts estaban en un scratchpad temporal y se
@@ -404,6 +417,8 @@ Los tests viven en `src/pruebas` (aprobado) y los compila el tsconfig del servid
 - Fase 7a: Edge headless en el visor sondeando cada 80 ms `getAnimations()` de cada `.lienzo`, sus pines
   y su cuadrícula (keyframes, `transform-origin`), mientras corre `demo-visor.mjs` con 2500 ms por paso;
   más una captura a mitad de cada transición. Carpeta de prueba: solo `mapas/` y `retratos/`.
+- Fase 7b: igual, sondeando `getAnimations({ subtree: true })` de cada `.figura` (clase `saliendo`,
+  keyframes de entrada/salida/FLIP, fundidos de carta y retrato) y su posición en reposo.
 
 ---
 

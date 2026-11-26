@@ -147,6 +147,11 @@ body {
   width: 22vw;
 }
 
+/* La que sale queda fuera del flujo, en su sitio (left/top desde CapaFiguras), mientras se desvanece. */
+.figura.saliendo {
+  position: absolute;
+}
+
 .retrato {
   width: 100%;
   height: 40vh;

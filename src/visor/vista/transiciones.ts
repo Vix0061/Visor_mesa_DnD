@@ -85,6 +85,51 @@ export function desvanecer(elemento: Element, alTerminar: () => void): void {
     .finished.then(alTerminar, () => {});
 }
 
+// ---- Capa de figuras ----
+
+/** Figura que entra: sube un poco mientras aparece. */
+export function entrarFigura(elemento: HTMLElement): Promise<void> {
+  return terminar([
+    elemento.animate(
+      [
+        { transform: 'translateY(4vh)', opacity: 0 },
+        { transform: 'none', opacity: 1 },
+      ],
+      { duration: 500, easing: FRENA, fill: 'backwards' },
+    ),
+  ]);
+}
+
+/** Figura que sale: se desvanece encogiendo. */
+export function salirFigura(elemento: HTMLElement): Promise<void> {
+  return terminar([
+    elemento.animate(
+      [
+        { transform: 'scale(1)', opacity: 1 },
+        { transform: 'scale(0.85)', opacity: 0 },
+      ],
+      { duration: 400, easing: SUAVE, fill: 'forwards' },
+    ),
+  ]);
+}
+
+/** FLIP: la tarjeta ya está en su sitio nuevo; parte desplazada (dx, dy) hasta él. */
+export function deslizar(elemento: HTMLElement, dx: number, dy: number): Promise<void> {
+  return terminar([
+    elemento.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], {
+      duration: 450,
+      easing: SUAVE,
+    }),
+  ]);
+}
+
+/** Fundido breve de opacidad (cambio de carta o de imagen). */
+export function fundir(elemento: HTMLElement, desde: number, hasta: number): Promise<void> {
+  return terminar([
+    elemento.animate([{ opacity: desde }, { opacity: hasta }], { duration: 180, easing: SUAVE, fill: 'forwards' }),
+  ]);
+}
+
 // Una animación anterior con fill: 'forwards' seguiría aplicándose al acabar la nueva.
 function cancelar(elemento: Element): void {
   for (const animacion of elemento.getAnimations()) animacion.cancel();
